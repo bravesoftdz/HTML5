@@ -43,7 +43,7 @@ type
 implementation
 
 uses
-    System.SysUtils
+    System.SysUtils             //
   ;
 
 { THTML5.TStringArray_Helper }
@@ -81,7 +81,7 @@ var
   A: string;
 begin
   if (aTagName.Trim.IsEmpty = TRUE) then begin
-      raise Exception.Create('Tag belirtilmemiþ');
+      raise Exception.Create('Tag belirtilmemiÅŸ');
   end else begin
       A := aAttributes.toString(' ').Trim;
       Result := Format( iif( (aSelfClosable = TRUE)
@@ -266,4 +266,3 @@ begin
 end;
 
 end.
-
