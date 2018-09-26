@@ -3,32 +3,32 @@ unit WebBrowser_Helper_;
 interface
 
 uses
-    SHDocVw       //  TWebBrowser
-  , Vcl.Forms     //  TApplication
+    SHDocVw                                                                    //  TWebBrowser
+  , Vcl.Forms                                                                  //  TApplication
   ;
 
 type
-  TWebBrowserHelper = class helper for TWebBrowser                         // Sýnýf hizmetçisi
+  TWebBrowserHelper = class helper for TWebBrowser                             // SÄ±nÄ±f hizmetÃ§isi
     type
       TIEMode = (iemUnknown, iemIE7, iemIE8, iemIE9, iemIE10, iemIE11);
     public
-      function GetHTML: String;                                            // TWebBrowser nesnesindeki HTML kodu
-      function GetTEXT: String;                                            // TWebBrowser nesnesinde gösterilen sayfadaki text (HTML kodu içermez, düz metindir...)
-      procedure RunHTML(aHTMLCode: String; aApplication: TApplication);    // Doðrudan HTML kodlarýný çalýþtýracak olan yordamýmýz
-      class function SetupIEMode(aAyarla: Boolean; IE_Kipi: TIEMode): LongInt;       // Internet Explorer'in hangi versiyon kipinde çalýþacaðýný YÖNETÝR
-      class function SetIEMode(Mode: TIEMode): boolean;                              // Internet Explorer'in hangi versiyon kipinde çalýþacaðýný BELÝRLER
-      class function GetIEMode: TIEMode;                                             // Internet Explorer'in hangi versiyon kipinde çalýþtýðýný OKUR
+      function GetHTML: String;                                                // TWebBrowser nesnesindeki HTML kodu
+      function GetTEXT: String;                                                // TWebBrowser nesnesinde gÃ¶sterilen sayfadaki text (HTML kodu iÃ§ermez, dÃ¼z metindir...)
+      procedure RunHTML(aHTMLCode: String; aApplication: TApplication);        // DoÄŸrudan HTML kodlarÄ±nÄ± Ã§alÄ±ÅŸtÄ±racak olan yordamÄ±mÄ±z
+      class function SetupIEMode(aAyarla: Boolean; IE_Kipi: TIEMode): LongInt; // Internet Explorer'in hangi versiyon kipinde Ã§alÄ±ÅŸacaÄŸÄ±nÄ± YÃ–NETÄ°R
+      class function SetIEMode(Mode: TIEMode): boolean;                        // Internet Explorer'in hangi versiyon kipinde Ã§alÄ±ÅŸacaÄŸÄ±nÄ± BELÄ°RLER
+      class function GetIEMode: TIEMode;                                       // Internet Explorer'in hangi versiyon kipinde Ã§alÄ±ÅŸtÄ±ÄŸÄ±nÄ± OKUR
   end;
 
 implementation
 
 uses
-    Winapi.ActiveX        //  IPersistStreamInit
-  , MSHTML                //  IHTMLElement
-  , System.Win.Registry   //  TRegistry
-  , System.Classes        //  TStringStream
-  , System.SysUtils       //  FreeAndNil
-  , Winapi.Windows        //  HKEY_CURRENT_USER
+    Winapi.ActiveX                                                             //  IPersistStreamInit
+  , MSHTML                                                                     //  IHTMLElement
+  , System.Win.Registry                                                        //  TRegistry
+  , System.Classes                                                             //  TStringStream
+  , System.SysUtils                                                            //  FreeAndNil
+  , Winapi.Windows                                                             //  HKEY_CURRENT_USER
   ;
 
 { TWebBrowserHelper }
@@ -61,25 +61,25 @@ end;
 
 procedure TWebBrowserHelper.RunHTML(aHTMLCode: String; aApplication: TApplication);
 var
-  SS: TStringStream;                             // HTML KodlarýmýzýTWebBrowser'a aktarmak için kullanacaðýz
+  SS: TStringStream;                             // HTML KodlarÄ±mÄ±zÄ±TWebBrowser'a aktarmak iÃ§in kullanacaÄŸÄ±z
 begin
-  Navigate('about:blank');                       // TWebBrowser nesnesine temiz bir sayfa açýyoruz.
+  Navigate('about:blank');                       // TWebBrowser nesnesine temiz bir sayfa aÃ§Ä±yoruz.
   try
-    while (ReadyState < READYSTATE_INTERACTIVE)  // TWebBrowser'in iþinin bitmesini bekliyoruz. Bu arada ana thread'imizin rutinine devam etmesini saðlýyoruz.
-       do aApplication.ProcessMessages;          // ProcessMessage'nin bu tarz kullanýmý pek önerilmeyebiliyor OnDocumentComplete ve READYSTATE_COMPLETE kullanýmý
-                                                 // da önerilmektedir fakat bizim örneðimiz için ProcessMessage kullanmak yeterli olacaktýr.
-                                                 // Daha kompleks, daha saðlamcý yapýlar kurmak isterseniz yukarýda deðindiðim olay iþleyici
-                                                 // ve durum bayraðýný kullanmak faydalý olabilir...
+    while (ReadyState < READYSTATE_INTERACTIVE)  // TWebBrowser'in iÅŸinin bitmesini bekliyoruz. Bu arada ana thread'imizin rutinine devam etmesini saÄŸlÄ±yoruz.
+       do aApplication.ProcessMessages;          // ProcessMessage'nin bu tarz kullanÄ±mÄ± pek Ã¶nerilmeyebiliyor OnDocumentComplete ve READYSTATE_COMPLETE kullanÄ±mÄ±
+                                                 // da Ã¶nerilmektedir fakat bizim Ã¶rneÄŸimiz iÃ§in ProcessMessage kullanmak yeterli olacaktÄ±r.
+                                                 // Daha kompleks, daha saÄŸlamcÄ± yapÄ±lar kurmak isterseniz yukarÄ±da deÄŸindiÄŸim olay iÅŸleyici
+                                                 // ve durum bayraÄŸÄ±nÄ± kullanmak faydalÄ± olabilir...
   finally
-    if (Assigned(Document) = TRUE) then begin    // TWebBrowser boþ sayfamýzý iþlemeye hazýr ise yükleme iþlemine baþlayabiliriz...
+    if (Assigned(Document) = TRUE) then begin    // TWebBrowser boÅŸ sayfamÄ±zÄ± iÅŸlemeye hazÄ±r ise yÃ¼kleme iÅŸlemine baÅŸlayabiliriz...
         SS := TStringStream.Create;
-        SS.WriteString(aHTMLCode);               // HTML kodlarýmýzý StringStream'ýmýza yüklüyoruz.
+        SS.WriteString(aHTMLCode);               // HTML kodlarÄ±mÄ±zÄ± StringStream'Ä±mÄ±za yÃ¼klÃ¼yoruz.
         try
-          SS.Seek(0, 0);                         // StringStream'in ilk baytýna pozisyonumuzu alýyoruz.
+          SS.Seek(0, 0);                         // StringStream'in ilk baytÄ±na pozisyonumuzu alÄ±yoruz.
           (Document as IPersistStreamInit)
-          .Load(TStreamAdapter.Create(SS));      // TWebBrowser'in Document nesnesine IPersistStreamInit arabirimi vasýtasýyla HTML içeriðimizi yüklüyoruz.
+          .Load(TStreamAdapter.Create(SS));      // TWebBrowser'in Document nesnesine IPersistStreamInit arabirimi vasÄ±tasÄ±yla HTML iÃ§eriÄŸimizi yÃ¼klÃ¼yoruz.
         finally
-          SS.Free;                               // Bitti, hepsi bu kadar. Artýk HTML kodlarýnýnýn sonucunu bir web sayfasý olarak görebiliriz...
+          SS.Free;                               // Bitti, hepsi bu kadar. ArtÄ±k HTML kodlarÄ±nÄ±nÄ±n sonucunu bir web sayfasÄ± olarak gÃ¶rebiliriz...
         end;
     end;
   end;
@@ -102,28 +102,26 @@ begin
 
   Result := 0;
   if  (aAyarla = TRUE )
-  and ( IE_Kipi = iemUnknown ) then Exit;                     // IE'nin bilinmeyen (muhtemelen daha yeni) bir sürümüyse çýk...
+  and ( IE_Kipi = iemUnknown ) then Exit;                     // IE'nin bilinmeyen (muhtemelen daha yeni) bir sÃ¼rÃ¼mÃ¼yse Ã§Ä±k...
 
-  Uygulama := ExtractFileName(ParamStr(0));                   // Kendi uygulamamýzýn EXE adý (Mesela "Project1.exe" gibi...)
+  Uygulama := ExtractFileName(ParamStr(0));                   // Kendi uygulamamÄ±zÄ±n EXE adÄ± (Mesela "Project1.exe" gibi...)
 
   Value := 0;
-  if (aAyarla = TRUE ) then begin                             // Aþaðýdaki kýsým ile ilgili olarak þu linki incelemenizi tavsiye ederim;
+  if (aAyarla = TRUE ) then begin                             // AÅŸaÄŸÄ±daki kÄ±sÄ±m ile ilgili olarak ÅŸu linki incelemenizi tavsiye ederim;
                                                               // http://www.ahmetaltay.com.tr/2016/02/del...mulasyonu/
-     case IE_Kipi of                                          // IE'nin ne þekilde çalýþacaðýný seçiyoruz...
+     case IE_Kipi of                                          // IE'nin ne ÅŸekilde Ã§alÄ±ÅŸacaÄŸÄ±nÄ± seÃ§iyoruz...
           iemIE7 : Value := 7000;
           iemIE8 : Value := 8888;                             // IE 8  + DOCTYPE spesifikasyonunu destekler
           iemIE9 : Value := 9999;                             // IE 9  + DOCTYPE spesifikasyonunu destekler
           iemIE10: Value := 10001;                            // IE 10 + DOCTYPE spesifikasyonunu destekler
           iemIE11: Value := 11001;                            // IE 11 + DOCTYPE spesifikasyonunu destekler
-          else     Value := 11001;                            // IE 11 ve üzeriise IE11 + DOCTYPE spesifikasyonunu destekler
+          else     Value := 11001;                            // IE 11 ve Ã¼zeriise IE11 + DOCTYPE spesifikasyonunu destekler
       end;
   end;
 
   Reg := nil;
   try
-    // Bu noktada uygulamamýz için REGISTRY'de bir ayarlama yapýyoruz
-    // Bu ayarlama uygulamamýzýn hangi IE sürümüyle çalýþacaðýný
-    // Ýþletim sistemine söylemiþ olacak...
+    // Bu noktada uygulamamÄ±z iÃ§in REGISTRY'de bir ayarlama yapÄ±yoruz. Bu ayarlama uygulamamÄ±zÄ±n hangi IE sÃ¼rÃ¼mÃ¼yle Ã§alÄ±ÅŸacaÄŸÄ±nÄ± Ä°ÅŸletim sistemine sÃ¶ylemiÅŸ olacak...
     Reg := TRegistry.Create();
     Reg.RootKey := HKEY_CURRENT_USER;
     if (Reg.OpenKey(REG_KEY, True) ) then begin
@@ -136,10 +134,10 @@ begin
         Reg.CloseKey;
     end;
   except;
-    // Herhangi bir hata mesajý görmek istemiyoruz...
+    // Herhangi bir hata mesajÄ± gÃ¶rmek istemiyoruz...
   end;
 
-  if (Assigned(Reg) = TRUE) then FreeAndNil(Reg);             // REG nesnesinin Temizliði...
+  if (Assigned(Reg) = TRUE) then FreeAndNil(Reg);             // REG nesnesinin TemizliÄŸi...
 
   if (aAyarla = FALSE) and (Value > 0) then begin
       I := Value div 1000;
@@ -155,7 +153,6 @@ begin
       end;
   end;
 end;
-
 
 initialization
   TWebBrowser.SetIEMode( iemIE11);
